@@ -47,6 +47,11 @@ jobs:
       run: |
           mvn -N install
           mvn clean package
+    - name: Upload the report
+      uses: actions/upload-artifact@v2
+      with:
+        name: incubating-bin tar result
+        path: "./assembly-combined-package/target/apache-linkis-*-incubating-bin.tar.gz"
     - name: Build frontend by node.js
       run: |
           cd web
