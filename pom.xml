@@ -28,6 +28,19 @@
     </parent>
 
 
+    <repositories>
+        <repository>
+            <id>cloudera</id>
+            <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
+        </repository>
+<!--        <releases>-->
+<!--            <enabled>true</enabled>-->
+<!--        </releases>-->
+<!--        <snapshots>-->
+<!--            <enabled>true</enabled>-->
+<!--        </snapshots>-->
+    </repositories>
+
     <groupId>org.apache.linkis</groupId>
     <artifactId>linkis</artifactId>
     <version>1.0.3</version>
@@ -101,7 +114,7 @@
 
     <properties>
         <linkis.version>1.0.3</linkis.version>
-        <hadoop.version>2.7.2</hadoop.version>
+        <hadoop.version>3.0.0-cdh6.3.2</hadoop.version>
         <spring.eureka.version>2.2.1.RELEASE</spring.eureka.version>
         <spring.feign.version>2.2.1.RELEASE</spring.feign.version>
         <spring.boot.version>2.3.2.RELEASE</spring.boot.version>
@@ -227,7 +240,7 @@
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql.connector.version}</version>
-                <scope>test</scope>
+<!--                <scope>test</scope>-->
             </dependency>
         </dependencies>
     </dependencyManagement>
