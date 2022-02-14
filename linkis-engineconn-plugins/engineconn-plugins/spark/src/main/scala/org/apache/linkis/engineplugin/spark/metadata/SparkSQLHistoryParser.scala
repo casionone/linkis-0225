@@ -215,7 +215,7 @@ object SparkSQLHistoryParser {
 
       case c: CreateViewCommand =>
         addTableOrViewLevelObjs(c.name, outputObjects, columns = toCSColumnsByNamed(c.output), actionType = TableOperationType.CREATE)
-        ParseQuery(c.child, inputObjects)
+        ParseQuery(c.plan, inputObjects)
 
       case l: LoadDataCommand => addTableOrViewLevelObjs(l.table, outputObjects)
 
