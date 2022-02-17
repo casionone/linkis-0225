@@ -68,8 +68,8 @@ class Message(private var method: String,
 }
 
 object Message {
-  private val logger = LoggerFactory.getLogger(getClass)
 
+  private val logger = LoggerFactory.getLogger(getClass)
   def apply(method: String = null, status: Int = 0, message: String = null,
             data: util.HashMap[String, Object] = new util.HashMap[String, Object]): Message = {
     if (StringUtils.isEmpty(method)) {
@@ -139,4 +139,14 @@ object Message {
     case 3 => 403
     case 4 => 206
   }
+}
+
+object MessageStatus {
+
+  val NO_LOGIN: Int = -1
+  val SUCCESS: Int = 0
+  val ERROR: Int = 1
+  val VALIDATE_FAILED : Int = 2
+  val AUTH_FAILED: Int = 3
+  val WARNING: Int = 4
 }

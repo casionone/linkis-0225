@@ -1,0 +1,121 @@
+package org.apache.linkis.jobhistory.dao;
+
+import org.apache.linkis.jobhistory.entity.JobDetail;
+import org.assertj.core.api.Assertions;
+import org.h2.tools.Server;
+import org.junit.Assert;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Date;
+import java.util.List;
+
+class JobDetailMapperTest extends BaseDaoTest {
+
+    private static final Logger logger = LoggerFactory.getLogger(JobDetailMapperTest.class);
+
+    @Autowired
+    JobDetailMapper jobDetailMapper;
+
+    /**
+     * 用户创建测试的数据，如果是自增id，则不应该进行赋值
+     * CURD 都应该基于本方法创建的数据进行
+     * insert
+     *
+     * @return JobDetail
+     */
+    private JobDetail insertOne() {
+        //insertOne
+        JobDetail jobDetail = new JobDetail();
+        jobDetail.setJob_history_id(0L);
+        jobDetail.setResult_location("/test/location");
+        jobDetail.setResult_array_size(2);
+        jobDetail.setExecution_content("excution content");
+        jobDetail.setJob_group_info("test");
+        jobDetail.setCreated_time(new Date());
+        jobDetail.setUpdated_time(new Date());
+        jobDetail.setStatus("success");
+        jobDetail.setPriority(0);
+
+        jobDetailMapper.insertJobDetail(jobDetail);
+        System.out.println("iddddddddddddddddd=" + jobDetail.getId());
+        return jobDetail;
+    }
+
+    @BeforeAll
+    @DisplayName("Each unit test method is executed once before execution")
+    protected static void beforeAll() throws Exception {
+        //启动h2的控制台 方便查看h2数据
+        Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082")
+                .start();
+    }
+
+
+    @AfterAll
+    @DisplayName("Each unit test method is executed once before execution")
+    protected static void afterAll() throws Exception {
+        for (;;)
+        {
+
+        }
+    }
+
+    @Test
+    void testSelectJobDetailByJobHistoryId() {
+        JobDetail jobDetail = insertOne();
+        List<JobDetail> result = jobDetailMapper.selectJobDetailByJobHistoryId(jobDetail.getJob_history_id());
+        Assert.assertNotEquals(result.size(), 0);
+    }
+
+    @Test
+    void testSelectJobDetailByJobDetailId() {
+        JobDetail jobDetail = insertOne();
+        JobDetail result = jobDetailMapper.selectJobDetailByJobDetailId(jobDetail.getId());
+        Assert.assertNotNull(result);
+    }
+
+    @Test
+    void testInsertJobDetail() {
+        JobDetail jobDetail = insertOne();
+        Assert.assertTrue(jobDetail.getId() > 0);
+
+    }
+
+    @Test
+    void testUpdateJobDetail() {
+
+        JobDetail expectedJobDetail = insertOne();
+        expectedJobDetail.setResult_location("modify " + expectedJobDetail.getResult_location());
+        expectedJobDetail.setResult_array_size(10);
+        expectedJobDetail.setExecution_content("modify " + expectedJobDetail.getExecution_content());
+        expectedJobDetail.setJob_group_info("modify " + expectedJobDetail.getJob_group_info());
+        expectedJobDetail.setCreated_time(new Date());
+        expectedJobDetail.setUpdated_time(new Date());
+        expectedJobDetail.setStatus("modify " + expectedJobDetail.getStatus());
+        expectedJobDetail.setPriority(1);
+
+        jobDetailMapper.updateJobDetail(expectedJobDetail);
+
+        JobDetail actualJobDetail = jobDetailMapper.selectJobDetailByJobDetailId(expectedJobDetail.getId());
+
+//        Assert.assertEquals(expectedJobDetail, actualJobDetail);
+////        Assert.assertThat(actual, samePropertyValuesAs(expected));
+        //判断两个对象的属性值是否完全相等
+        Assertions.assertThat(actualJobDetail).usingRecursiveComparison().isEqualTo(expectedJobDetail);
+
+    }
+
+    @Test
+    void testSelectJobDetailStatusForUpdateByJobDetailId() {
+        JobDetail jobDetail = insertOne();
+        String result = jobDetailMapper.selectJobDetailStatusForUpdateByJobDetailId(jobDetail.getId());
+        Assert.assertNotNull(result);
+
+    }
+
+}

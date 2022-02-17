@@ -22,9 +22,10 @@ import org.apache.linkis.rpc.conf.RPCConfiguration
 import org.apache.linkis.server.utils.AopTargetUtils
 import javax.annotation.PostConstruct
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.{Configuration, Profile}
 
 
+@Profile(Array{"!test"})
 @Configuration
 class EurekaClientRefreshUtils {
 
