@@ -40,6 +40,12 @@
                 <exclude>org.apache.spark:*:jar</exclude>
                 <exclude>org.apache.zookeeper:*:jar</exclude>
                 <exclude>org.apache.avro:*:jar</exclude>
+                <exclude>com.google.code.findbugs:annotations:jar</exclude>
+                <exclude>commons-beanutils:commons-beanutils:jar</exclude>
+                <exclude>commons-codec:commons-codec:jar</exclude>
+                <exclude>commons-collections:commons-collections:jar</exclude>
+                <exclude>commons-io:commons-io:jar</exclude>
+
             </excludes>
         </dependencySet>
     </dependencySets>
