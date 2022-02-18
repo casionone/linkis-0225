@@ -1,29 +1,33 @@
 package org.apache.linkis.jobhistory.restful.api;
+import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-import org.apache.linkis.LinkisBaseServerApp;
 import org.apache.linkis.common.utils.JsonUtils;
+import org.apache.linkis.governance.common.entity.job.SubJobDetail;
 import org.apache.linkis.jobhistory.Scan;
 import org.apache.linkis.jobhistory.WebApplicationServer;
+import org.apache.linkis.jobhistory.conversions.TaskConversions;
 import org.apache.linkis.jobhistory.dao.JobDetailMapper;
+import org.apache.linkis.jobhistory.entity.JobDetail;
+import org.apache.linkis.jobhistory.entity.JobHistory;
+import org.apache.linkis.jobhistory.entity.QueryTaskVO;
 import org.apache.linkis.jobhistory.service.JobHistoryQueryService;
 import org.apache.linkis.server.Message;
 import org.apache.linkis.server.MessageStatus;
-import org.apache.linkis.server.utils.LinkisMainHelper;
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
-import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -31,16 +35,21 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyObject;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
+import static org.junit.jupiter.api.Assertions.*;
+
 /**
  * QueryRestfulApi Tester
  */
-@ActiveProfiles(value = {"h22"})
-@SpringBootTest(classes = {WebApplicationServer.class,Scan.class})
+//@ActiveProfiles(value = {"h2"})
+@SpringBootTest(classes = {WebApplicationServer.class, Scan.class})
 @AutoConfigureMockMvc
 public class QueryRestfulApiTest {
 
@@ -67,7 +76,7 @@ public class QueryRestfulApiTest {
 
     @AfterAll
     @DisplayName("Each unit test method is executed once before execution")
-    protected static void afterAll() throws Exception {
+    protected static void afterAll() {
     }
 
     @Test
@@ -80,8 +89,8 @@ public class QueryRestfulApiTest {
                 .andReturn();
 
 
-        Message res=JsonUtils.jackson().readValue(mvcResult.getResponse().getContentAsString(), Message.class);
-        Assert.assertEquals(res.getStatus(), MessageStatus.SUCCESS());
+        Message res = JsonUtils.jackson().readValue(mvcResult.getResponse().getContentAsString(), Message.class);
+        assertEquals(MessageStatus.SUCCESS(),res.getStatus());
 
         logger.info(mvcResult.getResponse().getContentAsString());
 
@@ -91,28 +100,44 @@ public class QueryRestfulApiTest {
     @Test
     public void testGetTaskByID() throws Exception {
 
-        MvcResult mvcResult = mockMvc.perform(get("/jobhistory/{id}/get",123))
+        long jobId=123;
+        MvcResult mvcResult = mockMvc.perform(get("/jobhistory/{id}/get", jobId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
-        Message res=JsonUtils.jackson().readValue(mvcResult.getResponse().getContentAsString(), Message.class);
-        Assert.assertEquals(res.getStatus(), MessageStatus.ERROR());
+
+
+        QueryTaskVO queryTaskVO=new QueryTaskVO();
+        queryTaskVO.setSubJobs(Lists.newArrayList());
+        queryTaskVO.setEngineStartTime(new Date());
+        queryTaskVO.setSourceTailor("test");
+        queryTaskVO.setSourceJson("test");
+        queryTaskVO.setTaskID(0L);
+
+
+        //any匹配器 不确定参数的场景  todo:mock未生效
+        MockedStatic<TaskConversions> taskConversionsMockedStatic = Mockito.mockStatic(TaskConversions.class);
+        when(TaskConversions.jobHistory2TaskVO(any(JobHistory.class),anyObject())).thenReturn(queryTaskVO);
+
+        Message res = JsonUtils.jackson().readValue(mvcResult.getResponse().getContentAsString(), Message.class);
+        assertEquals(MessageStatus.ERROR(),res.getStatus());
         logger.info(mvcResult.getResponse().getContentAsString());
     }
 
 
     @Test
     public void testList() throws Exception {
+        //带上非必要参数
         MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>();
-        paramsMap.add("startDate",String.valueOf(System.currentTimeMillis()));
-        paramsMap.add("endDate",String.valueOf(System.currentTimeMillis()));
-        paramsMap.add("status","1");
-        paramsMap.add("pageNow","1");
-        paramsMap.add("pageSize","15");
-        paramsMap.add("taskID","123");
-        paramsMap.add("executeApplicationName","test_name");
-        paramsMap.add("proxyUser",null);
+        paramsMap.add("startDate", String.valueOf(System.currentTimeMillis()));
+        paramsMap.add("endDate", String.valueOf(System.currentTimeMillis()));
+        paramsMap.add("status", "1");
+        paramsMap.add("pageNow", "1");
+        paramsMap.add("pageSize", "15");
+        paramsMap.add("taskID", "123");
+        paramsMap.add("executeApplicationName", "test_name");
+        paramsMap.add("proxyUser", null);
 
         MvcResult mvcResult = mockMvc.perform(get("/jobhistory/list")
                 .params(paramsMap))
@@ -120,8 +145,21 @@ public class QueryRestfulApiTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
+        Message res = JsonUtils.jackson().readValue(mvcResult.getResponse().getContentAsString(), Message.class);
+        assertEquals(MessageStatus.SUCCESS(),res.getStatus());
+        logger.info(mvcResult.getResponse().getContentAsString());
+
+        //不带非必要参数
+        mvcResult = mockMvc.perform(get("/jobhistory/list"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        res = JsonUtils.jackson().readValue(mvcResult.getResponse().getContentAsString(), Message.class);
+        assertEquals(MessageStatus.SUCCESS(),res.getStatus());
+
         logger.info(mvcResult.getResponse().getContentAsString());
     }
 
 
-} 
+}

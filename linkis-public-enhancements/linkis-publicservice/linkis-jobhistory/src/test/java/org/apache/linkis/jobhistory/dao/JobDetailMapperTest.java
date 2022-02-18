@@ -1,9 +1,7 @@
 package org.apache.linkis.jobhistory.dao;
 
 import org.apache.linkis.jobhistory.entity.JobDetail;
-import org.assertj.core.api.Assertions;
 import org.h2.tools.Server;
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -11,9 +9,12 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.Date;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 class JobDetailMapperTest extends BaseDaoTest {
 
@@ -59,30 +60,26 @@ class JobDetailMapperTest extends BaseDaoTest {
     @AfterAll
     @DisplayName("Each unit test method is executed once before execution")
     protected static void afterAll() throws Exception {
-        for (;;)
-        {
-
-        }
     }
 
     @Test
     void testSelectJobDetailByJobHistoryId() {
         JobDetail jobDetail = insertOne();
         List<JobDetail> result = jobDetailMapper.selectJobDetailByJobHistoryId(jobDetail.getJob_history_id());
-        Assert.assertNotEquals(result.size(), 0);
+        assertNotEquals(result.size(), 0);
     }
 
     @Test
     void testSelectJobDetailByJobDetailId() {
         JobDetail jobDetail = insertOne();
         JobDetail result = jobDetailMapper.selectJobDetailByJobDetailId(jobDetail.getId());
-        Assert.assertNotNull(result);
+        assertNotNull(result);
     }
 
     @Test
     void testInsertJobDetail() {
         JobDetail jobDetail = insertOne();
-        Assert.assertTrue(jobDetail.getId() > 0);
+        assertTrue(jobDetail.getId() > 0);
 
     }
 
@@ -103,10 +100,10 @@ class JobDetailMapperTest extends BaseDaoTest {
 
         JobDetail actualJobDetail = jobDetailMapper.selectJobDetailByJobDetailId(expectedJobDetail.getId());
 
-//        Assert.assertEquals(expectedJobDetail, actualJobDetail);
-////        Assert.assertThat(actual, samePropertyValuesAs(expected));
+//        assertEquals(expectedJobDetail, actualJobDetail);
+////       assertThat(actual, samePropertyValuesAs(expected));
         //判断两个对象的属性值是否完全相等
-        Assertions.assertThat(actualJobDetail).usingRecursiveComparison().isEqualTo(expectedJobDetail);
+        assertThat(actualJobDetail).usingRecursiveComparison().isEqualTo(expectedJobDetail);
 
     }
 
@@ -114,7 +111,7 @@ class JobDetailMapperTest extends BaseDaoTest {
     void testSelectJobDetailStatusForUpdateByJobDetailId() {
         JobDetail jobDetail = insertOne();
         String result = jobDetailMapper.selectJobDetailStatusForUpdateByJobDetailId(jobDetail.getId());
-        Assert.assertNotNull(result);
+        assertNotNull(result);
 
     }
 
