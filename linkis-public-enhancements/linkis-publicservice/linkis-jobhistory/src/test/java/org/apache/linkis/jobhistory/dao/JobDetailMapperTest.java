@@ -44,7 +44,6 @@ class JobDetailMapperTest extends BaseDaoTest {
         jobDetail.setPriority(0);
 
         jobDetailMapper.insertJobDetail(jobDetail);
-        System.out.println("iddddddddddddddddd=" + jobDetail.getId());
         return jobDetail;
     }
 

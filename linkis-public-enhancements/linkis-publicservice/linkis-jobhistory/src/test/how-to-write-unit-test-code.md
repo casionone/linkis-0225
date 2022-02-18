@@ -9,6 +9,7 @@ idea增强插件
 - GenerateAllSet   用于快速new创建对象，并设置默认值
 - MybatisX  ado与mapper的关联映射 方便查看
 
+controller service  
 ### 配置IDEA的Junit的模板 
 ```properties
 ######################################################################################## 
@@ -114,17 +115,18 @@ public class $testClass {
 
 
 ### 1.2 编写准则
-- 1.单元测试中不准使用 System.out 来进行人肉验证，或则if判断来验证（可以使用log进行关键日志输），必须使用断言 assert 来验证。
+- 1.单元测试中不准使用 System.out 来进行人肉验证，或则if判断来验证（可以使用log进行关键日志输出），必须使用断言 assert 来验证。
 - 2.保持单元测试的独立性。为了保证单元测试稳定可靠且便于维护，单元测试用例之间决不能互相调用，也不能依赖执行的先后次序。 反例：method2 需要依赖 method1 的执行，将执行结果作为 method2 的输入
 - 3.单元测试必须可以重复执行的，不能受到外界环境的影响。 
  说明：单元测试通常会被放到持续集成中，每次有代码 check in 时单元测试都会被执行。如果单测对外部环境（网络、服务、中间件等）有依赖，容易导致持续集成机制的不可用。 正例：为了不受外界环境影响，要求设计代码时就把被测类的相关依赖改成注入，在测试时用 spring 这样的依赖注入框架注入一个本地（内存）实现或者 Mock 实现。
 - 4.增量代码确保单元测试通过。 说明：新增代码必须补充单元测试，如果新增代码影响了原有单元测试，请修正
 - 5.对于单元测试，要保证测试粒度足够小，有助于精确定位问题。单测粒度一般都是方法级别(工具类或则枚举类等极少场景可以是类级别)。 说明：只有测试粒度小才能在出错时尽快定位到出错位置。单测不负责检查跨类或者跨系统的交互逻辑，那是集成测试的领域。
  
+ 集成测试:e2e框架 
  
  ## 2 断言的使用
 所有的测试用例的结果验证都必须使用断言模式
-优先使用Junt5的Assertions断言，极少数场景允许使用AssertJ的断言
+优先使用Junit5的Assertions断言，极少数场景允许使用AssertJ的断言  
 
 ### 2.1 Junit5常规断言
 
@@ -151,7 +153,7 @@ assertAll方法可以将多个判断逻辑放在一起处理，只要有一个�
      );
     }
 ```
-**异常断言**
+**异常断言 **
 Assertions.assertThrows方法，用来测试Executable实例执行execute方法时是否抛出指定类型的异常；
 如果execute方法执行时不抛出异常，或者抛出的异常与期望类型不一致，都会导致测试失败；
 示例:
@@ -175,6 +177,7 @@ Assertions.assertThrows方法，用来测试Executable实例执行execute方法�
 
 
 不是同一个实例，但是比较实例的属性值是否完全相等
+AssertJ
 ```html
     常用场景 数据库更新操作前/后的对象比较
     使用AssertJ的assertThat断言usingRecursiveComparison模式
@@ -184,6 +187,8 @@ Assertions.assertThrows方法，用来测试Executable实例执行execute方法�
 
 2 list等集合结果的断言 
 结果集集合的大小需要断言 
+范围或则具体大size 
+
 结果集集合中的每个对象需要断言,推荐结合stream模式的Predicate进行使用
 示例:
 ```java
@@ -198,18 +203,18 @@ Assertions.assertThrows方法，用来测试Executable实例执行execute方法�
 ## 3.单元测试的编写
 ### 类的划分
 按类的大功能可以大体分类
-- Controller  提供http服务的controller
+- Controller  提供http服务的controller 配合mockmvc做单元测试 
 - Service   业务逻辑代码的service层
 - Dao 与数据库操作的Dao层
 - util工具功能类 常用的功能工具
 - exception类  自定义的异常类
 - enum类 枚举类   
-- entity类   用于DB交互以及方法处理的参数VO对象等实体类（若除了正常得get set外还有其他自定义函数的需要进行单元测试）
+- entity类  用于DB交互以及方法处理的参数VO对象等实体类（若除了正常得get set外还有其他自定义函数的需要进行单元测试）
 
 ### 3.1 Controller类的单元测试
 使用Mockmvc
-主要验证接口请求RequestMethod方式，基本参数，以及返回结果预期。
-主要场景:带上非必要参数和不带非必要参数的场景
+主要验证 接口请求RequestMethod方式，基本参数，以及返回结果预期。
+主要场景:带上非必要参数和不带非必要参数的场景 异常
 
 ```java
  @Test
@@ -251,6 +256,9 @@ Assertions.assertThrows方法，用来测试Executable实例执行execute方法�
 
 ### 3.1 Dao 类的单元测试
 使用H2数据库，配置文件中application.properties中需要配置H2数据库的基本信息，以及mybatis的相关路径信息
+公共数据问题
+mysql sql语句转化为h2语句
+
 ```properties
 #h2数据库配置
 spring.datasource.driver-class-name=org.h2.Driver
@@ -277,7 +285,7 @@ mybatis-plus.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
 
 编写规范 
 1. 使用@Transactional以及@Rollback 实现数据回滚，避免数据污染
-2. 每一个DaoTest应该有一个创建初始化数据公共方法（或导入数据的方式）来准备数据,相关的查询，更新，删除等操作都应该先调用该公共方法进行数据的准备
+2. 每一个DaoTest应该有一个创建初始化数据公共方法（或导入数据的方式csv）来准备数据,相关的查询，更新，删除等操作都应该先调用该公共方法进行数据的准备
 3. 创建测试的数据，如果某属性值是自增id，则不应该进行赋值
 4. 创建的测试数据，应尽可能和实际样例数据保持一致
 5. 更新数据测试时，如果字段允许，请带上`modify-原始值`前缀
@@ -286,13 +294,29 @@ mybatis-plus.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
 
 待确认 
 
-web应用的启动方式 使用LinkisBaseServerApp 还是 新起一个SpringApplication，跑测试用例耗时会不会过长
-测试相同的配置文件管控问题 如h2数据的配置
-初始化h2表创建时，需要全量创建
-scala类的测试时用java语言编写还是自由选择？
-代码覆盖率的要求 jacoco统计
-eureak服务注册关闭
+web应用的启动方式 不使用LinkisBaseServerApp 还是 新起一个SpringApplication，跑测试用例耗时会不会过长
+测试相同的配置文件管控问题 如h2数据的配置 存本地 Maven -D指定配置
+初始化h2表创建时，需要全量创建 
+scala类的测试时用scala语言编写还是自由选择 参考spark？
+代码覆盖率的要求 70&-80% jacoco统计
+eureak服务注册关闭 配置关掉
+e2e 集成测试
 
+底线目前30% 
+
+controller service  工具类 单测  
+dao 暂时不写 
+参照spark 
+- util工具功能类 常用的功能工具
+- exception类  自定义的异常类
+- enum类 枚举类   
+- entity类  用于DB交互以及方法处理的参数VO对象等实体类（若除了正常得get set外还有其他自定义函数的需要进行单元测试）
+
+linkis-manager 模块
+linkis-test 模块
+
+
+每个测试类复用spring  @RunWith(MockitoJUnitRunner.class)
 
 
 

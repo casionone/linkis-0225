@@ -62,7 +62,7 @@ public class QueryRestfulApiTest {
     @MockBean(name = "jobHistoryQueryService")
     private JobHistoryQueryService jobHistoryQueryService;
 
-    @MockBean(name = "jobDetailMapper")
+    @MockBean(name = "jobDetailMapper") //是否必须
     private JobDetailMapper jobDetailMapper;
 
     @BeforeAll
@@ -119,7 +119,7 @@ public class QueryRestfulApiTest {
         //any匹配器 不确定参数的场景  todo:mock未生效
         MockedStatic<TaskConversions> taskConversionsMockedStatic = Mockito.mockStatic(TaskConversions.class);
         when(TaskConversions.jobHistory2TaskVO(any(JobHistory.class),anyObject())).thenReturn(queryTaskVO);
-
+        when(jobDetailMapper.insertJobDetail(new JobDetail())).thenReturn(1);
         Message res = JsonUtils.jackson().readValue(mvcResult.getResponse().getContentAsString(), Message.class);
         assertEquals(MessageStatus.ERROR(),res.getStatus());
         logger.info(mvcResult.getResponse().getContentAsString());
