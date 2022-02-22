@@ -24,8 +24,8 @@ class JobDetailMapperTest extends BaseDaoTest {
     JobDetailMapper jobDetailMapper;
 
     /**
-     * 用户创建测试的数据，如果是自增id，则不应该进行赋值
-     * CURD 都应该基于本方法创建的数据进行
+     * User-created test data, if it is an auto-increment id, it should not be assigned
+     * CURD should be based on the data created by this method
      * insert
      *
      * @return JobDetail
@@ -50,7 +50,7 @@ class JobDetailMapperTest extends BaseDaoTest {
     @BeforeAll
     @DisplayName("Each unit test method is executed once before execution")
     protected static void beforeAll() throws Exception {
-        //启动h2的控制台 方便查看h2数据
+        //Start the console of h2 to facilitate viewing of h2 data
         Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082")
                 .start();
     }
@@ -101,7 +101,7 @@ class JobDetailMapperTest extends BaseDaoTest {
 
 //        assertEquals(expectedJobDetail, actualJobDetail);
 ////       assertThat(actual, samePropertyValuesAs(expected));
-        //判断两个对象的属性值是否完全相等
+       // Determine whether the property values of the two objects are exactly the same
         assertThat(actualJobDetail).usingRecursiveComparison().isEqualTo(expectedJobDetail);
 
     }

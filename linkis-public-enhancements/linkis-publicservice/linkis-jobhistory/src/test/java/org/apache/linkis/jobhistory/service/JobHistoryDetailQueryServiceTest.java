@@ -1,8 +1,8 @@
 package org.apache.linkis.jobhistory.service;
-import com.google.common.collect.Lists;
-import org.apache.linkis.governance.common.entity.job.JobRequest;
-import com.google.common.collect.Maps;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import org.apache.linkis.governance.common.entity.job.JobRequest;
 import org.apache.linkis.governance.common.entity.job.SubJobDetail;
 import org.apache.linkis.governance.common.entity.job.SubJobInfo;
 import org.apache.linkis.governance.common.protocol.job.*;
@@ -18,7 +18,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.function.Predicate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
 class JobHistoryDetailQueryServiceTest {
@@ -30,14 +31,14 @@ class JobHistoryDetailQueryServiceTest {
     JobDetailMapper mapper;
 
     /**
-     * 用户创建测试的数据，如果是自增id，则不应该进行赋值
-     * CURD 都应该基于本方法创建的数据进行
+     * User-created test data, if it is an auto-increment id, it should not be assigned
+     * CURD should be based on the data created by this method
      * insert
      *
      * @return SubJobInfo
      */
     private SubJobInfo buildSubJobInfo() {
-        SubJobDetail subJobDetail=new SubJobDetail();
+        SubJobDetail subJobDetail = new SubJobDetail();
         subJobDetail.setJobGroupId(1L);
         subJobDetail.setResultLocation("test-resultLocation");
         subJobDetail.setResultSize(2);
@@ -52,7 +53,7 @@ class JobHistoryDetailQueryServiceTest {
         subJobInfo.setSubJobDetail(subJobDetail);
         subJobInfo.setStatus("test-status");
         subJobInfo.setCode("test-code");
-        JobRequest jobRequest=new JobRequest();
+        JobRequest jobRequest = new JobRequest();
         jobRequest.setId(0L);
         jobRequest.setReqId("");
         jobRequest.setSubmitUser("");
@@ -79,29 +80,29 @@ class JobHistoryDetailQueryServiceTest {
 
     @Test
     void testAdd() {
-        JobDetailReqInsert  reqInsert=new JobDetailReqInsert(buildSubJobInfo());
-        JobRespProtocol jobRespProtocol=service.add(reqInsert);
+        JobDetailReqInsert reqInsert = new JobDetailReqInsert(buildSubJobInfo());
+        JobRespProtocol jobRespProtocol = service.add(reqInsert);
         assertEquals(jobRespProtocol.getStatus(), 0);
     }
 
     @Test
     void testChange() {
 
-        JobDetailReqUpdate jobDetailReqUpdate=new JobDetailReqUpdate(buildSubJobInfo());
-        JobRespProtocol jobRespProtocol=service.change(jobDetailReqUpdate);
+        JobDetailReqUpdate jobDetailReqUpdate = new JobDetailReqUpdate(buildSubJobInfo());
+        JobRespProtocol jobRespProtocol = service.change(jobDetailReqUpdate);
         assertEquals(jobRespProtocol.getStatus(), 0);
     }
 
     @Test
     void testBatchChange() {
-        ArrayList list=new ArrayList<SubJobInfo>();
+        ArrayList list = new ArrayList<SubJobInfo>();
         list.add(buildSubJobInfo());
         list.add(buildSubJobInfo());
-        JobDetailReqBatchUpdate  jobDetailReqBatchUpdate=new JobDetailReqBatchUpdate(list);
-        ArrayList<JobRespProtocol> jobRespProtocolArrayList=service.batchChange(jobDetailReqBatchUpdate);
+        JobDetailReqBatchUpdate jobDetailReqBatchUpdate = new JobDetailReqBatchUpdate(list);
+        ArrayList<JobRespProtocol> jobRespProtocolArrayList = service.batchChange(jobDetailReqBatchUpdate);
 
-        //list 配和stream的predicate进行断言判断
-        Predicate<JobRespProtocol> statusPrecate = e -> e.getStatus()==0;
+        //list is matched with the predicate of stream for assertion judgment
+        Predicate<JobRespProtocol> statusPrecate = e -> e.getStatus() == 0;
         assertEquals(2, jobRespProtocolArrayList.size());
         assertTrue(jobRespProtocolArrayList.stream().anyMatch(statusPrecate));
 
@@ -109,7 +110,7 @@ class JobHistoryDetailQueryServiceTest {
 
     @Test
     void testQuery() {
-        SubJobDetail subJobDetail=new SubJobDetail();
+        SubJobDetail subJobDetail = new SubJobDetail();
         subJobDetail.setId(0L);
         subJobDetail.setJobGroupId(0L);
         subJobDetail.setResultLocation("");
@@ -121,8 +122,8 @@ class JobHistoryDetailQueryServiceTest {
         subJobDetail.setStatus("");
         subJobDetail.setPriority(0);
 
-        JobDetailReqQuery jobDetailReqQuery=new JobDetailReqQuery(subJobDetail);
-        JobRespProtocol jobRespProtocol= service.query(jobDetailReqQuery);
+        JobDetailReqQuery jobDetailReqQuery = new JobDetailReqQuery(subJobDetail);
+        JobRespProtocol jobRespProtocol = service.query(jobDetailReqQuery);
         assertEquals(jobRespProtocol.getStatus(), 0);
     }
 }

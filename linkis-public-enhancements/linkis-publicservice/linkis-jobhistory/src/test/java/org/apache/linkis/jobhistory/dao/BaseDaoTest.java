@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
 
-//@ActiveProfiles(value = {"h2"})
 @SpringBootTest(classes = Scan.class)
 @Transactional
 @Rollback(true)
