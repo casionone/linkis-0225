@@ -20,15 +20,17 @@ package org.apache.linkis.cli.core.exception.handler;
 import org.apache.linkis.cli.common.entity.command.CmdTemplate;
 import org.apache.linkis.cli.core.exception.CommandException;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.aspectj.lang.annotation.Before;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 
 public class CommandExceptionHandlerTest {
     Exception e;
     CommandException ce1, ce2, ce3;
     CmdTemplate template;
 
-    @Before
+    @BeforeEach
     public void init() {
         //    e = new Exception("exception test");
         //    template = null;
