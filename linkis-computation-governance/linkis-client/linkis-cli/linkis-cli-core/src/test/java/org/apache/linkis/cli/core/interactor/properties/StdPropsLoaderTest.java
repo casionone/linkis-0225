@@ -22,7 +22,6 @@ import org.apache.linkis.cli.core.interactor.properties.reader.PropertiesReader;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-import org.aspectj.lang.annotation.After;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
