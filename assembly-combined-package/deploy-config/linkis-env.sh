@@ -36,7 +36,6 @@ WORKSPACE_USER_ROOT_PATH=file:///tmp/linkis/ ##file:// required
 HDFS_USER_ROOT_PATH=hdfs:///tmp/linkis ##hdfs:// required
 
 
-
 ### Path to store started engines and engine logs, must be local
 ENGINECONN_ROOT_PATH=/appcom/tmp
 
@@ -45,13 +44,8 @@ ENGINECONN_ROOT_PATH=/appcom/tmp
 ### Path to store job ResultSet:file or hdfs path
 RESULT_SET_ROOT_PATH=hdfs:///tmp/linkis ##hdfs:// required
 
-### Provide the DB information of Hive metadata database.
-### Attention! If there are special characters like "&", they need to be enclosed in quotation marks.
-HIVE_META_URL=""
-HIVE_META_USER=""
-HIVE_META_PASSWORD=""
-
-##YARN REST URL  spark engine required
+##YARN REST URL  spark engine required.
+##This configuration will store in linkis db table of linkis_cg_rm_external_resource_provider
 YARN_RESTFUL_URL=http://127.0.0.1:8088
 
 ## request spnego enabled Yarn resource restful interface When Yarn enable kerberos
@@ -61,20 +55,19 @@ YARN_RESTFUL_URL=http://127.0.0.1:8088
 #KEYTAB_PATH=/etc/security/keytabs/yarn.keytab
 #KRB5_PATH=/etc/krb5.conf
 
-###HADOOP CONF DIR
-HADOOP_CONF_DIR=/appcom/config/hadoop-config
-
-###HIVE CONF DIR
-HIVE_CONF_DIR=/appcom/config/hive-config
-
-###SPARK CONF DIR
-SPARK_CONF_DIR=/appcom/config/spark-config
+##=====better to export in .bash_rc file======
+##HADOOP CONF DIR
+#HADOOP_CONF_DIR=/appcom/config/hadoop-config
+##HIVE CONF DIR
+#HIVE_CONF_DIR=/appcom/config/hive-config
+##SPARK CONF DIR
+#SPARK_CONF_DIR=/appcom/config/spark-config
 
 ## Engine version conf
 #SPARK_VERSION
 #SPARK_VERSION=2.4.3
 ##HIVE_VERSION
-#HIVE_VERSION=1.2.1
+#HIVE_VERSION=2.3.3
 #PYTHON_VERSION=python2
 
 ################### The install Configuration of all Micro-Services #####################

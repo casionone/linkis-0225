@@ -14,9 +14,17 @@
 # limitations under the License.
 #
 
+### Provide the DB information of Linkis
 ### Used to store user's custom variables, user's configuration, UDFs and functions, while providing the JobHistory service
 MYSQL_HOST=
 MYSQL_PORT=
 MYSQL_DB=
 MYSQL_USER=
 MYSQL_PASSWORD=
+
+
+### Provide the DB information of Hive metadata database.
+### Attention! If there are special characters like "&", they need to be enclosed in quotation marks.
+HIVE_META_URL=
+HIVE_META_USER=
+HIVE_META_PASSWORD=
