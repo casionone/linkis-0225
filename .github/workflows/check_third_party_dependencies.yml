@@ -39,7 +39,7 @@ jobs:
 #           mvn install
       - name: mvn dependency:copy-dependencies
         run:
-          mvn dependency:copy-dependencies -DincludeScope=runtime -DoutputDirectory=${{ github.workspace }}/current_dependencies
+          mvn dependency:copy-dependencies --fail-at-end -DincludeScope=runtime -DoutputDirectory=${{ github.workspace }}/current_dependencies
       - name: generate current_dependencies.txt
         run: |
           ls ${{ github.workspace }}/current_dependencies  |egrep -v "^linkis" |sort > ~/current_dependencies.txt
