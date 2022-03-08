@@ -26,7 +26,8 @@ import org.apache.linkis.datasourcemanager.core.validate.ParameterValidator;
 import org.apache.linkis.server.Message;
 import org.apache.linkis.server.MessageStatus;
 import org.apache.linkis.server.security.SecurityFilter;
-
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -50,6 +51,7 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
 
 @ExtendWith({SpringExtension.class})
@@ -67,6 +69,17 @@ class DataSourceAdminRestfulApiTest {
 
     @MockBean private DataSourceInfoService dataSourceInfoService;
 
+    private static MockedStatic<SecurityFilter> securityFilter;
+
+    @BeforeAll
+    public static void init() {
+        securityFilter = mockStatic(SecurityFilter.class);
+    }
+    @AfterAll
+    public static void close() {
+        securityFilter.close();
+    }
+
     @Test
     void insertJsonEnv() throws Exception {
         long dataSourceEnvId = 10l;
@@ -76,7 +89,7 @@ class DataSourceAdminRestfulApiTest {
         dataSourceEnv.setId(dataSourceEnvId);
         StringWriter dsJsonWriter = new StringWriter();
         JsonUtils.jackson().writeValue(dsJsonWriter, dataSourceEnv);
-        MockedStatic<SecurityFilter> securityFilter = Mockito.mockStatic(SecurityFilter.class);
+
         securityFilter
                 .when(() -> SecurityFilter.getLoginUsername(isA(HttpServletRequest.class)))
                 .thenReturn("testUser", "hadoop");
@@ -128,7 +141,6 @@ class DataSourceAdminRestfulApiTest {
         long dataSourceEnvId = 10l;
         String url = String.format("/data-source-manager/env/%s", dataSourceEnvId);
         MvcUtils mvcUtils = new MvcUtils(mockMvc);
-        MockedStatic<SecurityFilter> securityFilter = Mockito.mockStatic(SecurityFilter.class);
         securityFilter
                 .when(() -> SecurityFilter.getLoginUsername(isA(HttpServletRequest.class)))
                 .thenReturn("testUser", "hadoop");
@@ -156,7 +168,6 @@ class DataSourceAdminRestfulApiTest {
         JsonUtils.jackson().writeValue(dsJsonWriter, dataSourceEnv);
 
         MvcUtils mvcUtils = new MvcUtils(mockMvc);
-        MockedStatic<SecurityFilter> securityFilter = Mockito.mockStatic(SecurityFilter.class);
         securityFilter
                 .when(() -> SecurityFilter.getLoginUsername(isA(HttpServletRequest.class)))
                 .thenReturn("testUser", "hadoop");

@@ -32,6 +32,8 @@ import org.apache.linkis.server.Message;
 import org.apache.linkis.server.MessageStatus;
 import org.apache.linkis.server.security.SecurityFilter;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -60,6 +62,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.mockStatic;
 
 @ExtendWith({SpringExtension.class})
 @AutoConfigureMockMvc
@@ -80,6 +83,17 @@ class DataSourceCoreRestfulApiTest {
     @MockBean ParameterValidator parameterValidator;
 
     @MockBean MetadataOperateService metadataOperateService;
+
+    private static MockedStatic<SecurityFilter> securityFilter;
+
+    @BeforeAll
+    public static void init() {
+        securityFilter = mockStatic(SecurityFilter.class);
+    }
+    @AfterAll
+    public static void close() {
+        securityFilter.close();
+    }
 
     @Test
     void getAllDataSourceTypes() throws Exception {
@@ -116,7 +130,6 @@ class DataSourceCoreRestfulApiTest {
         dataSource.setDataSourceName("test");
         StringWriter dsJsonWriter = new StringWriter();
         JsonUtils.jackson().writeValue(dsJsonWriter, dataSource);
-        Mockito.mockStatic(SecurityFilter.class);
 
         Mockito.doNothing().when(dataSourceInfoService).saveDataSourceInfo(dataSource);
         MvcResult mvcResult =
@@ -145,7 +158,7 @@ class DataSourceCoreRestfulApiTest {
         dataSource.setDataSourceName("ds-hive");
         StringWriter dsJsonWriter = new StringWriter();
         JsonUtils.jackson().writeValue(dsJsonWriter, dataSource);
-        MockedStatic<SecurityFilter> securityFilter = Mockito.mockStatic(SecurityFilter.class);
+
         securityFilter
                 .when(() -> SecurityFilter.getLoginUsername(isA(HttpServletRequest.class)))
                 .thenReturn("testUser");
@@ -190,7 +203,7 @@ class DataSourceCoreRestfulApiTest {
         StringWriter dsJsonWriter = new StringWriter();
         JsonUtils.jackson().writeValue(dsJsonWriter, params);
 
-        MockedStatic<SecurityFilter> securityFilter = Mockito.mockStatic(SecurityFilter.class);
+
         securityFilter
                 .when(() -> SecurityFilter.getLoginUsername(isA(HttpServletRequest.class)))
                 .thenReturn("testUser");
@@ -243,7 +256,7 @@ class DataSourceCoreRestfulApiTest {
                 MessageStatus.ERROR() == res.getStatus()
                         && res.getMessage().contains("No Exists The DataSource"));
 
-        MockedStatic<SecurityFilter> securityFilter = Mockito.mockStatic(SecurityFilter.class);
+
         securityFilter
                 .when(() -> SecurityFilter.getLoginUsername(isA(HttpServletRequest.class)))
                 .thenReturn("testUser")
@@ -273,7 +286,7 @@ class DataSourceCoreRestfulApiTest {
                 MessageStatus.ERROR() == res.getStatus()
                         && res.getMessage().contains("No Exists The DataSource"));
 
-        MockedStatic<SecurityFilter> securityFilter = Mockito.mockStatic(SecurityFilter.class);
+
         securityFilter
                 .when(() -> SecurityFilter.getLoginUsername(isA(HttpServletRequest.class)))
                 .thenReturn("testUser")
@@ -305,7 +318,7 @@ class DataSourceCoreRestfulApiTest {
                 MessageStatus.ERROR() == res.getStatus()
                         && res.getMessage().contains("No Exists The DataSource"));
 
-        MockedStatic<SecurityFilter> securityFilter = Mockito.mockStatic(SecurityFilter.class);
+
         securityFilter
                 .when(() -> SecurityFilter.getLoginUsername(isA(HttpServletRequest.class)))
                 .thenReturn("testUser")
@@ -335,7 +348,7 @@ class DataSourceCoreRestfulApiTest {
                 MessageStatus.ERROR() == res.getStatus()
                         && res.getMessage().contains("No Exists The DataSource"));
 
-        MockedStatic<SecurityFilter> securityFilter = Mockito.mockStatic(SecurityFilter.class);
+
         securityFilter
                 .when(() -> SecurityFilter.getLoginUsername(isA(HttpServletRequest.class)))
                 .thenReturn("testUser")
@@ -367,7 +380,7 @@ class DataSourceCoreRestfulApiTest {
                 MessageStatus.ERROR() == res.getStatus()
                         && res.getMessage().contains("No Exists The DataSource"));
 
-        MockedStatic<SecurityFilter> securityFilter = Mockito.mockStatic(SecurityFilter.class);
+
         securityFilter
                 .when(() -> SecurityFilter.getLoginUsername(isA(HttpServletRequest.class)))
                 .thenReturn("testUser")
@@ -405,7 +418,7 @@ class DataSourceCoreRestfulApiTest {
                 MessageStatus.ERROR() == res.getStatus()
                         && res.getMessage().contains("No Exists The DataSource"));
 
-        MockedStatic<SecurityFilter> securityFilter = Mockito.mockStatic(SecurityFilter.class);
+
         securityFilter
                 .when(() -> SecurityFilter.getLoginUsername(isA(HttpServletRequest.class)))
                 .thenReturn("testUser")
@@ -443,7 +456,7 @@ class DataSourceCoreRestfulApiTest {
                 MessageStatus.ERROR() == res.getStatus()
                         && res.getMessage().contains("No Exists The DataSource"));
 
-        MockedStatic<SecurityFilter> securityFilter = Mockito.mockStatic(SecurityFilter.class);
+
         securityFilter
                 .when(() -> SecurityFilter.getLoginUsername(isA(HttpServletRequest.class)))
                 .thenReturn("testUser")
@@ -481,7 +494,7 @@ class DataSourceCoreRestfulApiTest {
                 MessageStatus.ERROR() == res.getStatus()
                         && res.getMessage().contains("No Exists The DataSource"));
 
-        MockedStatic<SecurityFilter> securityFilter = Mockito.mockStatic(SecurityFilter.class);
+
         securityFilter
                 .when(() -> SecurityFilter.getLoginUsername(isA(HttpServletRequest.class)))
                 .thenReturn("testUser")
@@ -511,7 +524,7 @@ class DataSourceCoreRestfulApiTest {
                 MessageStatus.ERROR() == res.getStatus()
                         && res.getMessage().contains("No Exists The DataSource"));
 
-        MockedStatic<SecurityFilter> securityFilter = Mockito.mockStatic(SecurityFilter.class);
+
         securityFilter
                 .when(() -> SecurityFilter.getLoginUsername(isA(HttpServletRequest.class)))
                 .thenReturn("testUser")
@@ -538,7 +551,7 @@ class DataSourceCoreRestfulApiTest {
         DataSourceType dataSourceType = new DataSourceType();
         dataSourceType.setName("hive");
         dataSource.setDataSourceType(dataSourceType);
-        MockedStatic<SecurityFilter> securityFilter = Mockito.mockStatic(SecurityFilter.class);
+
         securityFilter
                 .when(() -> SecurityFilter.getLoginUsername(isA(HttpServletRequest.class)))
                 .thenReturn("testUser", "testUser", "testUser", "hadoop");
@@ -573,7 +586,7 @@ class DataSourceCoreRestfulApiTest {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("currentPage", "10");
         params.add("pageSize", "20");
-        MockedStatic<SecurityFilter> securityFilter = Mockito.mockStatic(SecurityFilter.class);
+
         securityFilter
                 .when(() -> SecurityFilter.getLoginUsername(isA(HttpServletRequest.class)))
                 .thenReturn("testUser");
