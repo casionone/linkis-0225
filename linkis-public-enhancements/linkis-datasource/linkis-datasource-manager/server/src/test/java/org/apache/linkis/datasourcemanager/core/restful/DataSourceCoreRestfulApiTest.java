@@ -32,8 +32,6 @@ import org.apache.linkis.server.Message;
 import org.apache.linkis.server.MessageStatus;
 import org.apache.linkis.server.security.SecurityFilter;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -48,6 +46,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validator;
 
 import com.github.pagehelper.PageInfo;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockedStatic;
@@ -90,6 +90,7 @@ class DataSourceCoreRestfulApiTest {
     public static void init() {
         securityFilter = mockStatic(SecurityFilter.class);
     }
+
     @AfterAll
     public static void close() {
         securityFilter.close();
@@ -203,7 +204,6 @@ class DataSourceCoreRestfulApiTest {
         StringWriter dsJsonWriter = new StringWriter();
         JsonUtils.jackson().writeValue(dsJsonWriter, params);
 
-
         securityFilter
                 .when(() -> SecurityFilter.getLoginUsername(isA(HttpServletRequest.class)))
                 .thenReturn("testUser");
@@ -256,7 +256,6 @@ class DataSourceCoreRestfulApiTest {
                 MessageStatus.ERROR() == res.getStatus()
                         && res.getMessage().contains("No Exists The DataSource"));
 
-
         securityFilter
                 .when(() -> SecurityFilter.getLoginUsername(isA(HttpServletRequest.class)))
                 .thenReturn("testUser")
@@ -285,7 +284,6 @@ class DataSourceCoreRestfulApiTest {
         assertTrue(
                 MessageStatus.ERROR() == res.getStatus()
                         && res.getMessage().contains("No Exists The DataSource"));
-
 
         securityFilter
                 .when(() -> SecurityFilter.getLoginUsername(isA(HttpServletRequest.class)))
@@ -318,7 +316,6 @@ class DataSourceCoreRestfulApiTest {
                 MessageStatus.ERROR() == res.getStatus()
                         && res.getMessage().contains("No Exists The DataSource"));
 
-
         securityFilter
                 .when(() -> SecurityFilter.getLoginUsername(isA(HttpServletRequest.class)))
                 .thenReturn("testUser")
@@ -347,7 +344,6 @@ class DataSourceCoreRestfulApiTest {
         assertTrue(
                 MessageStatus.ERROR() == res.getStatus()
                         && res.getMessage().contains("No Exists The DataSource"));
-
 
         securityFilter
                 .when(() -> SecurityFilter.getLoginUsername(isA(HttpServletRequest.class)))
@@ -379,7 +375,6 @@ class DataSourceCoreRestfulApiTest {
         assertTrue(
                 MessageStatus.ERROR() == res.getStatus()
                         && res.getMessage().contains("No Exists The DataSource"));
-
 
         securityFilter
                 .when(() -> SecurityFilter.getLoginUsername(isA(HttpServletRequest.class)))
@@ -418,7 +413,6 @@ class DataSourceCoreRestfulApiTest {
                 MessageStatus.ERROR() == res.getStatus()
                         && res.getMessage().contains("No Exists The DataSource"));
 
-
         securityFilter
                 .when(() -> SecurityFilter.getLoginUsername(isA(HttpServletRequest.class)))
                 .thenReturn("testUser")
@@ -455,7 +449,6 @@ class DataSourceCoreRestfulApiTest {
         assertTrue(
                 MessageStatus.ERROR() == res.getStatus()
                         && res.getMessage().contains("No Exists The DataSource"));
-
 
         securityFilter
                 .when(() -> SecurityFilter.getLoginUsername(isA(HttpServletRequest.class)))
@@ -494,7 +487,6 @@ class DataSourceCoreRestfulApiTest {
                 MessageStatus.ERROR() == res.getStatus()
                         && res.getMessage().contains("No Exists The DataSource"));
 
-
         securityFilter
                 .when(() -> SecurityFilter.getLoginUsername(isA(HttpServletRequest.class)))
                 .thenReturn("testUser")
@@ -523,7 +515,6 @@ class DataSourceCoreRestfulApiTest {
         assertTrue(
                 MessageStatus.ERROR() == res.getStatus()
                         && res.getMessage().contains("No Exists The DataSource"));
-
 
         securityFilter
                 .when(() -> SecurityFilter.getLoginUsername(isA(HttpServletRequest.class)))
