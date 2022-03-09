@@ -82,26 +82,26 @@ public class DataSourceAdminRestfulApi {
                     }
                     dataSourceEnv.setCreateUser(userName);
                     insertDataSourceEnv(dataSourceEnv);
-                    return Message.ok().data("insert_id", dataSourceEnv.getId());
+                    return Message.ok().data("insertId", dataSourceEnv.getId());
                 },
                 "/data-source-manager/env/json",
                 "Fail to insert data source environment[新增数据源环境失败]");
     }
 
-    @RequestMapping(value = "/env_list/all/type/{type_id}", method = RequestMethod.GET)
-    public Message getAllEnvListByDataSourceType(@PathVariable("type_id") Long typeId) {
+    @RequestMapping(value = "/env-list/all/type/{typeId}", method = RequestMethod.GET)
+    public Message getAllEnvListByDataSourceType(@PathVariable("typeId") Long typeId) {
         return RestfulApiHelper.doAndResponse(
                 () -> {
                     List<DataSourceEnv> envList =
                             dataSourceInfoService.listDataSourceEnvByType(typeId);
-                    return Message.ok().data("env_list", envList);
+                    return Message.ok().data("envList", envList);
                 },
                 "/data-source-manager/env_list/all/type/" + typeId,
                 "Fail to get data source environment list[获取数据源环境清单失败]");
     }
 
-    @RequestMapping(value = "/env/{env_id}", method = RequestMethod.GET)
-    public Message getEnvEntityById(@PathVariable("env_id") Long envId) {
+    @RequestMapping(value = "/env/{envId}", method = RequestMethod.GET)
+    public Message getEnvEntityById(@PathVariable("envId") Long envId) {
         return RestfulApiHelper.doAndResponse(
                 () -> {
                     DataSourceEnv dataSourceEnv = dataSourceInfoService.getDataSourceEnv(envId);
@@ -111,8 +111,8 @@ public class DataSourceAdminRestfulApi {
                 "Fail to get data source environment[获取数据源环境信息失败]");
     }
 
-    @RequestMapping(value = "/env/{env_id}", method = RequestMethod.DELETE)
-    public Message removeEnvEntity(@PathVariable("env_id") Long envId, HttpServletRequest request) {
+    @RequestMapping(value = "/env/{envId}", method = RequestMethod.DELETE)
+    public Message removeEnvEntity(@PathVariable("envId") Long envId, HttpServletRequest request) {
         return RestfulApiHelper.doAndResponse(
                 () -> {
                     String userName = SecurityFilter.getLoginUsername(request);
@@ -126,16 +126,16 @@ public class DataSourceAdminRestfulApi {
                                         + envId
                                         + "]");
                     }
-                    return Message.ok().data("remove_id", removeId);
+                    return Message.ok().data("removeId", removeId);
                 },
                 "/data-source-manager/env/" + envId,
                 "Fail to remove data source environment[删除数据源环境信息失败]");
     }
 
-    @RequestMapping(value = "/env/{env_id}/json", method = RequestMethod.PUT)
+    @RequestMapping(value = "/env/{envId}/json", method = RequestMethod.PUT)
     public Message updateJsonEnv(
             @RequestBody DataSourceEnv dataSourceEnv,
-            @PathVariable("env_id") Long envId,
+            @PathVariable("envId") Long envId,
             HttpServletRequest request)
             throws ErrorException {
         return RestfulApiHelper.doAndResponse(
@@ -184,7 +184,7 @@ public class DataSourceAdminRestfulApi {
                     dataSourceEnvVo.setPageSize(null != pageSize ? pageSize : 10);
                     List<DataSourceEnv> queryList =
                             dataSourceInfoService.queryDataSourceEnvPage(dataSourceEnvVo);
-                    return Message.ok().data("query_list", queryList);
+                    return Message.ok().data("queryList", queryList);
                 },
                 "/data-source-manager/env",
                 "Fail to query page of data source environment[查询数据源环境失败]");

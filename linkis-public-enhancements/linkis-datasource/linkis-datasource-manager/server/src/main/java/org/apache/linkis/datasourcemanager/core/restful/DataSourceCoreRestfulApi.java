@@ -84,19 +84,19 @@ public class DataSourceCoreRestfulApi {
                 () -> {
                     List<DataSourceType> dataSourceTypes =
                             dataSourceRelateService.getAllDataSourceTypes();
-                    return Message.ok().data("type_list", dataSourceTypes);
+                    return Message.ok().data("typeList", dataSourceTypes);
                 },
                 "/data-source-manager/type/all",
                 "Fail to get all types of data source[获取数据源类型列表失败]");
     }
 
-    @RequestMapping(value = "/key_define/type/{type_id}", method = RequestMethod.GET)
-    public Message getKeyDefinitionsByType(@PathVariable("type_id") Long dataSourceTypeId) {
+    @RequestMapping(value = "/key-define/type/{typeId}", method = RequestMethod.GET)
+    public Message getKeyDefinitionsByType(@PathVariable("typeId") Long dataSourceTypeId) {
         return RestfulApiHelper.doAndResponse(
                 () -> {
                     List<DataSourceParamKeyDefinition> keyDefinitions =
                             dataSourceRelateService.getKeyDefinitionsByType(dataSourceTypeId);
-                    return Message.ok().data("key_define", keyDefinitions);
+                    return Message.ok().data("keyDefine", keyDefinitions);
                 },
                 "/data-source-manager/key_define/type/" + dataSourceTypeId,
                 "Fail to get key definitions of data source type[查询数据源参数键值对失败]");
@@ -124,16 +124,16 @@ public class DataSourceCoreRestfulApi {
                                         + " 已经存在]");
                     }
                     insertDataSource(dataSource);
-                    return Message.ok().data("insert_id", dataSource.getId());
+                    return Message.ok().data("insertId", dataSource.getId());
                 },
                 "/data-source-manager/info/json",
                 "Fail to insert data source[新增数据源失败]");
     }
 
-    @RequestMapping(value = "/info/{data_source_id}/json", method = RequestMethod.PUT)
+    @RequestMapping(value = "/info/{dataSourceId}/json", method = RequestMethod.PUT)
     public Message updateDataSourceInJson(
             @RequestBody DataSource dataSource,
-            @PathVariable("data_source_id") Long dataSourceId,
+            @PathVariable("dataSourceId") Long dataSourceId,
             HttpServletRequest req) {
         return RestfulApiHelper.doAndResponse(
                 () -> {
@@ -180,9 +180,9 @@ public class DataSourceCoreRestfulApi {
      * @param req
      * @return
      */
-    @RequestMapping(value = "/parameter/{datasource_id}/json", method = RequestMethod.POST)
+    @RequestMapping(value = "/parameter/{dataSourceId}/json", method = RequestMethod.POST)
     public Message insertJsonParameter(
-            @PathVariable("datasource_id") Long datasourceId,
+            @PathVariable("dataSourceId") Long dataSourceId,
             @RequestBody Map<String, Object> params,
             HttpServletRequest req) {
         return RestfulApiHelper.doAndResponse(
@@ -192,7 +192,7 @@ public class DataSourceCoreRestfulApi {
                     String userName = SecurityFilter.getLoginUsername(req);
 
                     DataSource dataSource =
-                            dataSourceInfoService.getDataSourceInfoBrief(datasourceId);
+                            dataSourceInfoService.getDataSourceInfoBrief(dataSourceId);
                     if (null == dataSource) {
                         throw new ErrorException(
                                 ServiceErrorCode.DATASOURCE_NOTFOUND_ERROR.getValue(),
@@ -212,7 +212,7 @@ public class DataSourceCoreRestfulApi {
                     long versionId =
                             dataSourceInfoService.insertDataSourceParameter(
                                     keyDefinitionList,
-                                    datasourceId,
+                                    dataSourceId,
                                     connectParams,
                                     userName,
                                     comment);
@@ -230,9 +230,9 @@ public class DataSourceCoreRestfulApi {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/info/{data_source_id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/info/{dataSourceId}", method = RequestMethod.GET)
     public Message getInfoByDataSourceId(
-            @PathVariable("data_source_id") Long dataSourceId, HttpServletRequest request) {
+            @PathVariable("dataSourceId") Long dataSourceId, HttpServletRequest request) {
         return RestfulApiHelper.doAndResponse(
                 () -> {
                     DataSource dataSource = dataSourceInfoService.getDataSourceInfo(dataSourceId);
@@ -253,9 +253,9 @@ public class DataSourceCoreRestfulApi {
                 "Fail to access data source[获取数据源信息失败]");
     }
 
-    @RequestMapping(value = "/info/name/{data_source_name}", method = RequestMethod.GET)
+    @RequestMapping(value = "/info/name/{dataSourceName}", method = RequestMethod.GET)
     public Message getInfoByDataSourceName(
-            @PathVariable("data_source_name") String dataSourceName, HttpServletRequest request)
+            @PathVariable("dataSourceName") String dataSourceName, HttpServletRequest request)
             throws UnsupportedEncodingException {
         return RestfulApiHelper.doAndResponse(
                 () -> {
@@ -284,9 +284,9 @@ public class DataSourceCoreRestfulApi {
      * @param version
      * @return
      */
-    @RequestMapping(value = "/info/{data_source_id}/{version}", method = RequestMethod.GET)
+    @RequestMapping(value = "/info/{dataSourceId}/{version}", method = RequestMethod.GET)
     public Message getInfoByDataSourceIdAndVersion(
-            @PathVariable("data_source_id") Long dataSourceId,
+            @PathVariable("dataSourceId") Long dataSourceId,
             @PathVariable("version") Long version,
             HttpServletRequest request) {
         return RestfulApiHelper.doAndResponse(
@@ -317,9 +317,9 @@ public class DataSourceCoreRestfulApi {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/{data_source_id}/versions", method = RequestMethod.GET)
+    @RequestMapping(value = "/{dataSourceId}/versions", method = RequestMethod.GET)
     public Message getVersionList(
-            @PathVariable("data_source_id") Long dataSourceId, HttpServletRequest request) {
+            @PathVariable("dataSourceId") Long dataSourceId, HttpServletRequest request) {
         return RestfulApiHelper.doAndResponse(
                 () -> {
                     DataSource dataSource =
@@ -346,10 +346,10 @@ public class DataSourceCoreRestfulApi {
                 "Fail to access data source[获取数据源信息失败]");
     }
 
-    @RequestMapping(value = "/publish/{datasource_id}/{version_id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/publish/{dataSourceId}/{versionId}", method = RequestMethod.POST)
     public Message publishByDataSourceId(
-            @PathVariable("datasource_id") Long dataSourceId,
-            @PathVariable("version_id") Long versionId,
+            @PathVariable("dataSourceId") Long dataSourceId,
+            @PathVariable("versionId") Long versionId,
             HttpServletRequest request) {
         return RestfulApiHelper.doAndResponse(
                 () -> {
@@ -377,9 +377,9 @@ public class DataSourceCoreRestfulApi {
      * @param dataSourceId
      * @return
      */
-    @RequestMapping(value = "/info/{data_source_id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/info/{dataSourceId}", method = RequestMethod.DELETE)
     public Message removeDataSource(
-            @PathVariable("data_source_id") Long dataSourceId, HttpServletRequest request) {
+            @PathVariable("dataSourceId") Long dataSourceId, HttpServletRequest request) {
         return RestfulApiHelper.doAndResponse(
                 () -> {
                     // Get brief info
@@ -394,15 +394,15 @@ public class DataSourceCoreRestfulApi {
                         return Message.error(
                                 "Fail to remove data source[删除数据源信息失败], [id:" + dataSourceId + "]");
                     }
-                    return Message.ok().data("remove_id", removeId);
+                    return Message.ok().data("removeId", removeId);
                 },
                 "/data-source-manager/info/" + dataSourceId,
                 "Fail to remove data source[删除数据源信息失败]");
     }
 
-    @RequestMapping(value = "/info/{data_source_id}/expire", method = RequestMethod.PUT)
+    @RequestMapping(value = "/info/{dataSourceId}/expire", method = RequestMethod.PUT)
     public Message expireDataSource(
-            @PathVariable("data_source_id") Long dataSourceId, HttpServletRequest request) {
+            @PathVariable("dataSourceId") Long dataSourceId, HttpServletRequest request) {
         return RestfulApiHelper.doAndResponse(
                 () -> {
                     // Get brief info
@@ -417,7 +417,7 @@ public class DataSourceCoreRestfulApi {
                         return Message.error(
                                 "Fail to expire data source[数据源过期失败], [id:" + dataSourceId + "]");
                     }
-                    return Message.ok().data("expire_id", expireId);
+                    return Message.ok().data("expireId", expireId);
                 },
                 "/data-source-manager/info/" + dataSourceId + "/expire",
                 "Fail to expire data source[数据源过期失败]");
@@ -430,9 +430,9 @@ public class DataSourceCoreRestfulApi {
      * @param req
      * @return
      */
-    @RequestMapping(value = "/{data_source_id}/connect_params", method = RequestMethod.GET)
+    @RequestMapping(value = "/{dataSourceId}/connect_params", method = RequestMethod.GET)
     public Message getConnectParams(
-            @PathVariable("data_source_id") Long dataSourceId, HttpServletRequest req) {
+            @PathVariable("dataSourceId") Long dataSourceId, HttpServletRequest req) {
         return RestfulApiHelper.doAndResponse(
                 () -> {
                     DataSource dataSource =
@@ -452,9 +452,9 @@ public class DataSourceCoreRestfulApi {
                 "Fail to connect data source[连接数据源失败]");
     }
 
-    @RequestMapping(value = "/name/{data_source_name}/connect_params", method = RequestMethod.GET)
+    @RequestMapping(value = "/name/{dataSourceName}/connect_params", method = RequestMethod.GET)
     public Message getConnectParams(
-            @PathVariable("data_source_name") String dataSourceName, HttpServletRequest req)
+            @PathVariable("dataSourceName") String dataSourceName, HttpServletRequest req)
             throws UnsupportedEncodingException {
         return RestfulApiHelper.doAndResponse(
                 () -> {
@@ -477,9 +477,9 @@ public class DataSourceCoreRestfulApi {
                 "Fail to connect data source[连接数据源失败]");
     }
 
-    @RequestMapping(value = "/{data_source_id}/{version}/op/connect", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{dataSourceId}/{version}/op/connect", method = RequestMethod.PUT)
     public Message connectDataSource(
-            @PathVariable("data_source_id") Long dataSourceId,
+            @PathVariable("dataSourceId") Long dataSourceId,
             @PathVariable("version") Long version,
             HttpServletRequest req) {
         return RestfulApiHelper.doAndResponse(
@@ -536,7 +536,7 @@ public class DataSourceCoreRestfulApi {
                             dataSourceInfoService.queryDataSourceInfoPage(dataSourceVo);
                     List<DataSource> queryList = pageInfo.getList();
                     return Message.ok()
-                            .data("query_list", queryList)
+                            .data("queryList", queryList)
                             .data("totalPage", pageInfo.getTotal());
                 },
                 "/data-source-manager/info",
