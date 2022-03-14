@@ -45,15 +45,11 @@ object EngineType extends Enumeration with Logging {
 
   val ES = Value("es")
 
-  val PRESTO = Value("presto")
+  val DATAX = Value("datax")
 
   val FLINK = Value("flink")
 
   val APPCONN = Value("appconn")
-
-  val SQOOP = Value("sqoop")
-
-  val DATAX = Value("datax")
 
   def mapFsTypeToEngineType(fsType: String): String = {
     fsType match {
@@ -81,10 +77,8 @@ object EngineType extends Enumeration with Logging {
     case _ if IO_ENGINE_HDFS.toString.equalsIgnoreCase(str) => IO_ENGINE_HDFS
     case _ if PIPELINE.toString.equalsIgnoreCase(str) => PIPELINE
     case _ if ES.toString.equalsIgnoreCase(str) => ES
-    case _ if PRESTO.toString.equalsIgnoreCase(str) => PRESTO
     case _ if FLINK.toString.equalsIgnoreCase(str) => FLINK
     case _ if APPCONN.toString.equals(str) => APPCONN
-    case _ if SQOOP.toString.equalsIgnoreCase(str) => SQOOP
     case _ if DATAX.toString.equalsIgnoreCase(str) => DATAX
     case _ => null
 

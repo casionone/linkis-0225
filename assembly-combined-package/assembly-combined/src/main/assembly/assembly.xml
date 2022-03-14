@@ -94,6 +94,17 @@
       </includes>
     </fileSet>
 
+      <!--datax-->
+      <fileSet>
+          <directory>
+              ../../linkis-engineconn-plugins/engineconn-plugins/datax/target/out/
+          </directory>
+          <outputDirectory>lib/linkis-engineconn-plugins/</outputDirectory>
+          <includes>
+              <include>**/*</include>
+          </includes>
+      </fileSet>
+
             <!--python-->
     <fileSet>
       <directory>
